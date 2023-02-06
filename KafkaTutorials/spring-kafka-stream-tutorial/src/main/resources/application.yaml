@@ -1,6 +1,6 @@
-#spring:
-#  kafka:
-#    streams:
-#      bootstrap-servers: "localhost:9092"
-#      application-id: "spring-kafka-stream-id"
+spring:
+  kafka:
+    streams:
+      bootstrap-servers: "localhost:9092"
+      application-id: "spring-kafka-stream-id"
 

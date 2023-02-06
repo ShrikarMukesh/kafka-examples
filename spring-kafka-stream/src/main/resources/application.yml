@@ -1,0 +1,39 @@
+logging:
+  pattern:
+    console: "[Kafka Order] %clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(---){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+
+server:
+  port: 9001
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQL8Dialect
+      format_sql: true
+  main:
+    banner-mode: OFF
+  datasource:
+    url: jdbc:mysql://localhost:3306/kafkaorderdb
+    username: shrikar
+    password : Mukesh@123
+  kafka:
+    streams:
+      application-id: "spring-kafka-stream-id"
+    listener:
+      missing-topics-fatal: false
+    producer:
+      bootstrap-servers:
+        - localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: kafka-order-cg
+      enable-auto-commit: true
+      auto-offset-reset: earliest
+      bootstrap-servers:
+        - localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
