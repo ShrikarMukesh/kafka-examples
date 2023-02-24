@@ -35,5 +35,3 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-topic -
 ===========================================================================================================================
 For Whole : kafka-topics.sh --bootstrap-server localhost:9092 --describe
 Specific Topic: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test-topic
-
-kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic library-events

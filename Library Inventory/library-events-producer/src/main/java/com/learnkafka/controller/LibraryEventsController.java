@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @Slf4j
@@ -26,11 +27,16 @@ public class LibraryEventsController {
 
     @PostMapping("/v1/libraryevent")
     public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent)
-            throws JsonProcessingException, ExecutionException, InterruptedException {
+            throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
 
         //invoke kafka producer
+        log.info("before sendLibraryEvent ");
         libraryEvent.setLibraryEventType(LibraryEventType.NEW);
-        libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent);
+        //libraryEventProducer.sendLibraryEvent(libraryEvent);
+        SendResult<Integer, String> sendResult  = libraryEventProducer.sendLibraryEventSynchronous(libraryEvent);
+        log.info("Send");
+        //libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent);
+        log.info("after sendLibraryEvent ");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
 

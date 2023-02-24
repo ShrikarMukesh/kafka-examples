@@ -75,30 +75,32 @@ public class LibraryEventProducer {
 
     private ProducerRecord<Integer, String> buildProducerRecord(Integer key, String value, String topic) {
 
-
         List<Header> recordHeaders = List.of(new RecordHeader("event-source", "scanner".getBytes()));
 
         return new ProducerRecord<>(topic, null, key, value, recordHeaders);
     }
 
 
-    public SendResult<Integer, String> sendLibraryEventSynchronous(LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
+    public SendResult<Integer, String> sendLibraryEventSynchronous(LibraryEvent libraryEvent)
+            throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
 
         Integer key = libraryEvent.getLibraryEventId();
         String value = objectMapper.writeValueAsString(libraryEvent);
+
         SendResult<Integer,String> sendResult=null;
         try {
             sendResult = kafkaTemplate.sendDefault(key,value).get(1, TimeUnit.SECONDS);
+
         } catch (ExecutionException | InterruptedException e) {
+
             log.error("ExecutionException/InterruptedException Sending the Message and the exception is {}", e.getMessage());
             throw e;
         } catch (Exception e) {
+
             log.error("Exception Sending the Message and the exception is {}", e.getMessage());
             throw e;
         }
-
         return sendResult;
-
     }
 
     private void handleFailure(Integer key, String value, Throwable ex) {
@@ -108,8 +110,6 @@ public class LibraryEventProducer {
         } catch (Throwable throwable) {
             log.error("Error in OnFailure: {}", throwable.getMessage());
         }
-
-
     }
 
     private void handleSuccess(Integer key, String value, SendResult<Integer, String> result) {
