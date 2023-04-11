@@ -27,7 +27,7 @@ public class LibraryEventsController {
 
     @PostMapping("/v1/libraryevent")
     public ResponseEntity<LibraryEvent> postLibraryEvent1(@RequestBody @Valid LibraryEvent libraryEvent)
-            throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
+            throws JsonProcessingException {
 
         //invoke kafka producer
         log.info("before sendLibraryEvent ");
@@ -53,14 +53,12 @@ public class LibraryEventsController {
     }
 
     //PUT
-    @PutMapping("/v1/libraryevent")
-    public ResponseEntity<?> putLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException {
+    @PutMapping("/v1/libraryevents")
+    public ResponseEntity<?> putLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException  {
 
-
-        if(libraryEvent.getLibraryEventId()==null){
+        if(libraryEvent.getLibraryEventId()==null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please pass the LibraryEventId");
         }
-
         libraryEvent.setLibraryEventType(LibraryEventType.UPDATE);
         libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent);
         return ResponseEntity.status(HttpStatus.OK).body(libraryEvent);
