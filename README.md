@@ -27,3 +27,13 @@ Sink Connector - Reading Data from a Kafka topic and send it to an external data
 Kafka Streams API
 
 ![kafka](https://user-images.githubusercontent.com/46884233/209466738-5adfd16f-cc59-4eb0-84b2-6f3756824bcd.png)
+
+In Apache Kafka, the acks configuration property determines the number of acknowledgments the producer requires from the broker before considering a message as successfully sent. It affects the reliability and durability guarantees provided by Kafka. The acks property accepts the following values:
+<br/>
+acks=0: This setting means the producer will not wait for any acknowledgment from the broker. Once the message is sent, the producer considers it successful without any confirmation. This option provides the highest throughput but offers no reliability guarantee, as the message may be lost or go undelivered.
+<br/>
+acks=1: With acks=1, the producer waits for a leader replica of the topic partition to acknowledge the message. This ensures that the message is successfully written to the leader replica's local log. However, this setting does not guarantee that the message has been replicated to all the replicas before the acknowledgment is received. This option provides a balance between performance and reliability.
+<br/>
+acks=all/-1: When acks=all or acks=-1 is configured, the producer waits for acknowledgment from all in-sync replicas (ISRs) of the topic partition. This ensures that the message is written to multiple replicas and replicated for fault tolerance. It provides the highest level of durability and reliability but introduces additional latency due to the replication process.
+
+The acks configuration can be set when creating a Kafka Producer instance. For example:
