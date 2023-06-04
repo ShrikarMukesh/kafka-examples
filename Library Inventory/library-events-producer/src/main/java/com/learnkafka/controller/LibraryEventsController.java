@@ -59,6 +59,7 @@ public class LibraryEventsController {
         if(libraryEvent.getLibraryEventId()==null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please pass the LibraryEventId");
         }
+
         libraryEvent.setLibraryEventType(LibraryEventType.UPDATE);
         libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent);
         return ResponseEntity.status(HttpStatus.OK).body(libraryEvent);

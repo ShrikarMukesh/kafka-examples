@@ -27,6 +27,7 @@ public class LibraryEventProducer {
     KafkaTemplate<Integer,String> kafkaTemplate;
 
     String topic = "library-events";
+
     @Autowired
     ObjectMapper objectMapper;
 
@@ -113,6 +114,7 @@ public class LibraryEventProducer {
     }
 
     private void handleSuccess(Integer key, String value, SendResult<Integer, String> result) {
-        log.info("Message Sent SuccessFully for the key : {} and the value is {} , partition is {}", key, value, result.getRecordMetadata().partition());
+        log.info("Message Sent SuccessFully for the key : {} and the value is {} , partition is {}",
+                key, value, result.getRecordMetadata().partition());
     }
 }
