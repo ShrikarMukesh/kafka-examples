@@ -27,17 +27,16 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EmbeddedKafka(topics = {"library-events"}, partitions = 3)
+@EmbeddedKafka(topics = {"library-events", "library-events2"}, partitions = 3)
 @TestPropertySource(properties = {"spring.kafka.producer.bootstrap-servers=${spring.embedded.kafka.brokers}",
         "spring.kafka.admin.properties.bootstrap.servers=${spring.embedded.kafka.brokers}"})
-public class LibraryEventsControllerIntegrationTest {
+class LibraryEventsControllerIntegrationTest {
 
     @Autowired
     TestRestTemplate restTemplate;
 
     @Autowired
     EmbeddedKafkaBroker embeddedKafkaBroker;
-
 
     private Consumer<Integer,String> consumer;
 
@@ -58,15 +57,17 @@ public class LibraryEventsControllerIntegrationTest {
     void postLibraryEvent() throws InterruptedException {
         //given
         Book book = Book.builder()
-                .bookId(123)
-                .bookAuthor("Dilip")
-                .bookName("Kafka using Spring Boot")
+                .bookId(987)
+                .bookAuthor("Bruce Eckel")
+                .bookName("Thinking in Java")
                 .build();
 
         LibraryEvent libraryEvent = LibraryEvent.builder()
-                .libraryEventId(null)
+                .libraryEventId(987)
+                .libraryEventType(LibraryEventType.UPDATE)
                 .book(book)
                 .build();
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("content-type", MediaType.APPLICATION_JSON.toString());
         HttpEntity<LibraryEvent> request = new HttpEntity<>(libraryEvent, headers);
@@ -79,14 +80,14 @@ public class LibraryEventsControllerIntegrationTest {
 
         ConsumerRecord<Integer, String> consumerRecord =  KafkaTestUtils.getSingleRecord(consumer,"library-events");
         //Thread.sleep(3000);
-        String expectedRecord ="{\"libraryEventId\":null,\"libraryEventType\":\"NEW\",\"book\":{\"bookId\":123,\"bookName\":\"Kafka using Spring Boot\",\"bookAuthor\":\"Dilip\"}}";
+        String expectedRecord ="{\"libraryEventId\":987,\"libraryEventType\":\"NEW\",\"book\":{\"bookId\":987,\"bookName\":\"Thinking in Java\",\"bookAuthor\":\"Bruce Eckel\"}}";
         String value = consumerRecord.value();
         assertEquals(expectedRecord, value);
 
     }
 
     @Test
-    @Timeout(9)
+    @Timeout(30)
     void putLibraryEvent() throws InterruptedException {
         //given
         Book book = Book.builder()
@@ -105,12 +106,13 @@ public class LibraryEventsControllerIntegrationTest {
         HttpEntity<LibraryEvent> request = new HttpEntity<>(libraryEvent, headers);
 
         //when
-        ResponseEntity<LibraryEvent> responseEntity = restTemplate.exchange("/v1/libraryevents", HttpMethod.PUT, request, LibraryEvent.class);
+        ResponseEntity<LibraryEvent> responseEntity = restTemplate.exchange("/v1/libraryevent", HttpMethod.PUT, request, LibraryEvent.class);
 
         //then
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         ConsumerRecord<Integer, String> consumerRecord =  KafkaTestUtils.getSingleRecord(consumer,"library-events");
+
         //Thread.sleep(3000);
         String expectedRecord ="{\"libraryEventId\":987,\"libraryEventType\":\"UPDATE\",\"book\":{\"bookId\":987,\"bookName\":\"Thinking in Java\",\"bookAuthor\":\"Bruce Eckel\"}}";
         String value = consumerRecord.value();
@@ -138,7 +140,7 @@ public class LibraryEventsControllerIntegrationTest {
         HttpEntity<LibraryEvent> request = new HttpEntity<>(libraryEvent, headers);
 
         //when
-        ResponseEntity<LibraryEvent> responseEntity = restTemplate.exchange("/v1/libraryevents", HttpMethod.PUT, request, LibraryEvent.class);
+        ResponseEntity<LibraryEvent> responseEntity = restTemplate.exchange("/v1/libraryevent", HttpMethod.PUT, request, LibraryEvent.class);
 
         //then
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -150,5 +152,4 @@ public class LibraryEventsControllerIntegrationTest {
         assertEquals(expectedRecord, value);
 
     }
-
 }

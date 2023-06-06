@@ -34,7 +34,7 @@ public class LibraryEventsController {
         libraryEvent.setLibraryEventType(LibraryEventType.NEW);
         //libraryEventProducer.sendLibraryEvent(libraryEvent);
         log.info("Send");
-        libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent);
+        libraryEventProducer.sendLibraryEventApproach2(libraryEvent);
         log.info("after sendLibraryEvent ");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
@@ -53,7 +53,7 @@ public class LibraryEventsController {
     }
 
     //PUT
-    @PutMapping("/v1/libraryevents")
+    @PutMapping("/v1/libraryevent")
     public ResponseEntity<?> putLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException  {
 
         if(libraryEvent.getLibraryEventId()==null) {
@@ -61,7 +61,7 @@ public class LibraryEventsController {
         }
 
         libraryEvent.setLibraryEventType(LibraryEventType.UPDATE);
-        libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent);
+        libraryEventProducer.sendLibraryEventApproach2(libraryEvent);
         return ResponseEntity.status(HttpStatus.OK).body(libraryEvent);
     }
 }
