@@ -37,3 +37,7 @@ acks=1: With acks=1, the producer waits for a leader replica of the topic partit
 acks=all/-1: When acks=all or acks=-1 is configured, the producer waits for acknowledgment from all in-sync replicas (ISRs) of the topic partition. This ensures that the message is written to multiple replicas and replicated for fault tolerance. It provides the highest level of durability and reliability but introduces additional latency due to the replication process.
 
 The acks configuration can be set when creating a Kafka Producer instance. For example:
+<br/>
+
+![1690088095122](https://github.com/ShrikarMukesh/kafka-examples/assets/46884233/fbaf1a7f-51f9-453a-b296-bbe72ed0d10b)
+
