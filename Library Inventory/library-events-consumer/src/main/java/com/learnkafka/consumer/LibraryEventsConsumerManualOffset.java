@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LibraryEventsConsumerManualOffset implements AcknowledgingMessageListener<Integer,String> {
 
-
     @Override
     @KafkaListener(topics = {"library-events"})
     public void onMessage(ConsumerRecord<Integer, String> consumerRecord, Acknowledgment acknowledgment) {

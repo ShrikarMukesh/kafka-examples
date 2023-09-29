@@ -1,11 +1,12 @@
-Sure! Here are 20 popular Apache Kafka interview questions along with their answers:
+- Top 20 Kafka Interview Questions
 
 1. What is Apache Kafka?
    Apache Kafka is a distributed event streaming platform that allows you to publish and subscribe to streams of records in real-time. It is designed to handle high volumes of data and provide fault tolerance and scalability.
 
 2. What are the key components of Kafka?
    The key components of Kafka are:
-- Topics: Streams of records in a particular category.
+- Topics: Streams of records in a particular category. 
+  -- Topic Internally consist of partition (0 to N)
 - Producers: Applications that publish records to Kafka topics.
 - Consumers: Applications that subscribe to topics and process the records.
 - Brokers: Servers that manage the storage and replication of Kafka topics.
@@ -51,9 +52,7 @@ Sure! Here are 20 popular Apache Kafka interview questions along with their answ
     Kafka guarantees message ordering within a partition. All messages with the same partition key are written sequentially and are read in the same order by the consumers.
 
 16. What is the role of the Kafka Streams library?
-    The Kafka Streams library is a client library that allows you to perform stream processing tasks on data stored in Kafka. It
-
-provides a high-level API for building real-time applications and microservices.
+    The Kafka Streams library is a client library that allows you to perform stream processing tasks on data stored in Kafka. It provides a high-level API for building real-time applications and microservices.
 
 17. What is the purpose of the Kafka offset reset configuration?
     The Kafka offset reset configuration specifies what should happen when a consumer starts consuming a topic from a particular offset. It can be set to "earliest" (consume from the beginning) or "latest" (consume only new messages).
@@ -67,4 +66,14 @@ provides a high-level API for building real-time applications and microservices.
 20. How does Kafka handle data persistence and durability?
     Kafka persists data on disk for a configurable period of time or until a specific size limit is reached. This ensures durability and fault tolerance even if a broker fails. The data is replicated across multiple brokers to provide redundancy.
 
-These questions cover a range of topics related to Apache Kafka and should help you prepare for a Kafka interview. Good luck!
+The "acks" configuration property in Apache Kafka determines the number of acknowledgments a producer requires from the broker after sending a message. It controls the durability and reliability guarantees for message delivery.
+
+The "acks" property can be set to one of three values:
+
+1. "acks=0": This setting means that the producer does not wait for any acknowledgment from the broker. It offers the highest level of throughput but provides no guarantee of message delivery. If the broker fails or the message is lost, there is no way to know.
+
+2. "acks=1": This setting requires the leader broker to acknowledge the message once it is written to its local log. It provides a balance between throughput and reliability. The producer receives an acknowledgment when the leader broker acknowledges the message, but it does not wait for the replicas to acknowledge. If the leader fails before the replicas replicate the message, it may lead to message loss.
+
+3. "acks=all" or "acks=-1": This setting requires the leader broker to wait for acknowledgments from all in-sync replicas (ISRs) before considering the message as committed. It provides the highest level of reliability but comes with a potential decrease in throughput. It ensures that the message is durably stored in multiple replicas, reducing the risk of data loss.
+
+The choice of "acks" configuration depends on the desired trade-off between throughput and reliability. Higher acknowledgment settings (1 or all) provide stronger durability guarantees but may impact the overall performance of the producer. Lower acknowledgment settings (0) offer higher throughput but with a higher risk of message loss.
